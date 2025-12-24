@@ -42,6 +42,7 @@ function App() {
   // Render halaman sesuai route
   const renderPage = () => {
     // Halaman Public
+    // test
     const publicPages = {
       'home': <HomePage onAddToCart={handleAddToCart} />,
       'products': <ProductListPage onAddToCart={handleAddToCart} />,
