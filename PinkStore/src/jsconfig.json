@@ -1,0 +1,9 @@
+{
+  "files": ["./main.jsx"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
+  }
+}
