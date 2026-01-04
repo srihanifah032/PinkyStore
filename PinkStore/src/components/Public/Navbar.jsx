@@ -1,41 +1,36 @@
-import { Heart, Home, ShoppingCart, List } from 'lucide-react';
+﻿import { Heart, Home, ShoppingCart, List } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-function Navbar({ cartCount, onNavigate, currentPage }) {
+function Navbar({ cartCount }) {
   return (
-    <nav className="bg-gradient-to-r from-pink-400 via-pink-500 to-rose-500 text-white shadow-xl sticky top-0 z-50">
+    <nav className="bg-gradient-to-r from-pink-400 via-pink-400 to-pink-400 text-white shadow-xl sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => onNavigate('home')}>
+          <Link to="/" className="flex items-center gap-3 cursor-pointer">
             <Heart size={32} className="fill-white" />
             <div>
               <h1 className="text-2xl font-bold">Pink Store</h1>
               <p className="text-xs text-pink-100">Fashion Hijab Modern</p>
             </div>
-          </div>
+          </Link>
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => onNavigate('home')}
-              className={`px-4 py-2 rounded-lg flex items-center gap-2 transition ${
-                currentPage === 'home' ? 'bg-white text-pink-600' : 'hover:bg-pink-600'
-              }`}
+            <Link
+              to="/"
+              className="px-4 py-2 rounded-lg flex items-center gap-2 transition hover:bg-pink-600"
             >
               <Home size={18} />
               <span className="hidden sm:inline">Home</span>
-            </button>
-            <button
-              onClick={() => onNavigate('products')}
-              className={`px-4 py-2 rounded-lg flex items-center gap-2 transition ${
-                currentPage === 'products' ? 'bg-white text-pink-600' : 'hover:bg-pink-600'
-              }`}
+            </Link>
+            <Link
+              to="/products"
+              className="px-4 py-2 rounded-lg flex items-center gap-2 transition hover:bg-pink-600"
             >
               <List size={18} />
               <span className="hidden sm:inline">Products</span>
-            </button>
-            <button
-              onClick={() => onNavigate('cart')}
-              className={`px-4 py-2 rounded-lg flex items-center gap-2 transition relative ${
-                currentPage === 'cart' ? 'bg-white text-pink-600' : 'hover:bg-pink-600'
-              }`}
+            </Link>
+            <Link
+              to="/cart"
+              className="px-4 py-2 rounded-lg flex items-center gap-2 transition hover:bg-pink-600 relative"
             >
               <ShoppingCart size={18} />
               {cartCount > 0 && (
@@ -44,7 +39,7 @@ function Navbar({ cartCount, onNavigate, currentPage }) {
                 </span>
               )}
               <span className="hidden sm:inline">Cart</span>
-            </button>
+            </Link>
           </div>
         </div>
       </div>

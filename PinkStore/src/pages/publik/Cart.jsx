@@ -1,19 +1,14 @@
-import { ShoppingCart } from 'lucide-react';
+﻿// src/pages/publik/Cart.jsx
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { ShoppingCart, ShoppingBag } from 'lucide-react';
 import DataTable from '../../components/admin/DataTable';
-import { formatPrice } from '../../lib/utils';
 import ProductBadges from '../../components/Public/ProductBadges';
+import { formatPrice } from '../../lib/utils';
 
-function CartPage({ cart, onRemoveFromCart }) {
+function Cart({ cart, onRemoveFromCart }) {
   const getTotalPrice = () => {
     return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-  };
-
-  const handleDelete = (productId) => {
-    onRemoveFromCart(productId);
-    console.log('Tombol "Hapus" diklik:', {
-      productId: productId,
-      timestamp: new Date().toISOString()
-    });
   };
 
   if (cart.length === 0) {
@@ -23,7 +18,14 @@ function CartPage({ cart, onRemoveFromCart }) {
           <ShoppingCart size={48} className="text-pink-400" />
         </div>
         <p className="text-2xl font-bold text-gray-700 mb-2">Keranjang Masih Kosong</p>
-        <p className="text-gray-500">Belum ada produk yang ditambahkan</p>
+        <p className="text-gray-500 mb-6">Belum ada produk yang ditambahkan</p>
+        <Link
+          to="/products"
+          className="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold px-6 py-3 rounded-lg transition"
+        >
+          <ShoppingBag size={20} />
+          Mulai Belanja
+        </Link>
       </div>
     );
   }
@@ -34,7 +36,7 @@ function CartPage({ cart, onRemoveFromCart }) {
       <DataTable
         data={cart}
         columns={[
-          { header: 'ID', field: 'id' },
+          { header: 'ID', field: 'id', render: (row) => <span className="font-bold">#{row.id}</span> },
           { header: 'Produk', field: 'name', render: (row) => <span className="font-bold">{row.name}</span> },
           { header: 'Kategori', field: 'category', render: (row) => <ProductBadges category={row.category} /> },
           { header: 'Warna', field: 'color', render: (row) => <span className="font-semibold text-pink-600">{row.color}</span> },
@@ -46,14 +48,27 @@ function CartPage({ cart, onRemoveFromCart }) {
             <span className="font-bold text-pink-600">{formatPrice(row.price * row.quantity)}</span>
           )}
         ]}
-        onDelete={handleDelete}
+        onDelete={onRemoveFromCart}
       />
-      <div className="mt-6 bg-white rounded-xl shadow-md p-6 flex justify-between items-center">
-        <span className="text-xl font-bold text-gray-800">Total Pembayaran:</span>
+      <div className="mt-6 bg-white rounded-xl shadow-md p-6 flex justify-between items-center border border-pink-100">
+        <span className="text-xl font-bold text-gray-800"> Total Pembayaran:</span>
         <span className="text-3xl font-bold text-pink-600">{formatPrice(getTotalPrice())}</span>
+      </div>
+      <div className="mt-6 flex justify-end gap-4">
+        <Link
+          to="/products"
+          className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold px-6 py-3 rounded-lg transition"
+        >
+          Lanjut Belanja
+        </Link>
+        <button
+          className="bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold px-8 py-3 rounded-lg transition shadow-lg"
+        >
+          Checkout
+        </button>
       </div>
     </div>
   );
 }
 
-export default CartPage;
+export default Cart;

@@ -1,4 +1,4 @@
-import DataTable from "../../components/admin/DataTable";
+﻿import DataTable from "../../components/admin/DataTable";
 import { formatPrice } from "../../lib/utils";
 
 function AdminOrdersPage({ cart }) {

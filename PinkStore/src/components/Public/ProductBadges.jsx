@@ -1,4 +1,4 @@
-const getCategoryColor = (category) => {
+﻿const getCategoryColor = (category) => {
   const colors = {
     'Segi Empat': 'bg-pink-200 text-pink-800',
     'Pashmina': 'bg-rose-200 text-rose-800',

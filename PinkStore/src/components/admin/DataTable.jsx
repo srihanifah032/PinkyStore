@@ -1,4 +1,4 @@
-import { Trash2 } from 'lucide-react';
+﻿import { Trash2 } from 'lucide-react';
 
 function DataTable({ data, columns, onDelete }) {
   return (
