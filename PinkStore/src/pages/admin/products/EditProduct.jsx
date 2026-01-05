@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import ProductService from '../../services/ProductService';
+import ProductService from '../../../services/ProductService';
 
 function EditProduct() {
   const navigate = useNavigate();

@@ -1,45 +1,51 @@
-﻿// src/routes/AppRoutes.jsx
-import React from 'react';
+﻿import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import PublicLayout from '../components/layout/PublicLayout';
-import AdminLayout from '../components/layout/AdminLayout';
 
-// Import Public Pages
-import HomePage from '../pages/publik/Home';
-import ProductListPage from '../pages/publik/ProductList';
-import ProductDetailPage from '../pages/publik/ProductDetail';
-import CartPage from '../pages/publik/Cart';
+// Layouts
+import PublicLayout from '../components/layout/PublicLayout.jsx';
+import AdminLayout from '../components/layout/AdminLayout.jsx';
 
-// Import Admin Pages
-import DashboardPage from '../pages/admin/Dashboard';
-import AdminProductsPage from '../pages/admin/Products';
-import AddProductPage from '../pages/admin/AddProduct';
-import EditProductPage from '../pages/admin/EditProduct';
-import AdminOrdersPage from '../pages/admin/Orders';
+// PUBLIC PAGES
+import HomePage from '../pages/public/home/Home.jsx';
+import ProductListPage from '../pages/public/products/ProductList.jsx';
+import ProductDetailPage from '../pages/public/products/ProductDetail.jsx';
+import CartPage from '../pages/public/cart/Cart.jsx';
+import NotFound from '../pages/NotFound.jsx';
+
+// ADMIN PAGES
+import DashboardPage from '../pages/admin/dashboard/Dashboard.jsx';
+import ProductsPage from '../pages/admin/products/Products.jsx';
+import AddProductPage from '../pages/admin/products/AddProduct.jsx';
+import EditProductPage from '../pages/admin/products/EditProduct.jsx';
+import OrdersPage from '../pages/admin/orders/Orders.jsx';
+
 
 function AppRoutes({ cart, onAddToCart, onRemoveFromCart }) {
   return (
     <Routes>
-      {/* PUBLIC ROUTES */}
-      <Route path="/" element={<PublicLayout cartCount={cart.length} />}>
-        <Route index element={<HomePage onAddToCart={onAddToCart} />} />
-        <Route path="products" element={<ProductListPage onAddToCart={onAddToCart} />} />
-        <Route path="products/:id" element={<ProductDetailPage onAddToCart={onAddToCart} />} />
-        <Route path="cart" element={<CartPage cart={cart} onRemoveFromCart={onRemoveFromCart} />} />
+
+      {/* ================= PUBLIC ROUTES ================= */}
+      <Route element={<PublicLayout cartCount={cart.length} />}>
+        <Route path="/" element={<HomePage onAddToCart={onAddToCart} />} />
+        <Route path="/products" element={<ProductListPage onAddToCart={onAddToCart} />} />
+        <Route path="/products/:id" element={<ProductDetailPage onAddToCart={onAddToCart} />} />
+        <Route path="/cart" element={<CartPage cart={cart} onRemoveFromCart={onRemoveFromCart} />} />
       </Route>
 
-      {/* ADMIN ROUTES */}
+      {/* ================= ADMIN ROUTES ================= */}
       <Route path="/admin" element={<AdminLayout />}>
-        <Route index element={<Navigate to="/admin/dashboard" replace />} />
-        <Route path="dashboard" element={<DashboardPage cart={cart} />} />
-        <Route path="products" element={<AdminProductsPage />} />
+        <Route index element={<Navigate to="dashboard" replace />} />
+        <Route path="dashboard" element={<DashboardPage />} />
+        <Route path="products" element={<ProductsPage />} />
         <Route path="products/add" element={<AddProductPage />} />
         <Route path="products/edit/:id" element={<EditProductPage />} />
-        <Route path="orders" element={<AdminOrdersPage cart={cart} />} />
+        <Route path="orders" element={<OrdersPage />} />
       </Route>
 
-      {/* 404 NOT FOUND */}
-      <Route path="*" element={<Navigate to="/" replace />} />
+      {/* ================= FALLBACK ================= */}
+      <Route path="*" element={<NotFound />} />
+
+
     </Routes>
   );
 }

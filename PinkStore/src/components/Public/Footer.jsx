@@ -8,7 +8,7 @@ function Footer() {
           <Heart size={20} className="fill-white" />
           <p className="text-lg font-semibold">Pink Store Collection</p>
         </div>
-        <p className="text-sm text-pink-50 text-center">©️ 2024 Hijab Berkualitas untuk Muslimah Modern</p>
+        <p className="text-sm text-pink-50 text-center">© 2024 Hijab Berkualitas untuk Muslimah Modern</p>
       </div>
     </footer>
   );

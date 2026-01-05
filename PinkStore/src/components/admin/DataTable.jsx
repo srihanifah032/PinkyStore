@@ -1,44 +1,61 @@
-﻿import { Trash2 } from 'lucide-react';
+﻿import React from 'react';
 
-function DataTable({ data, columns, onDelete }) {
+function DataTable({ data = [], columns = [], renderActions }) {
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead className="bg-pink-100 border-b-2 border-pink-200">
+    <div className="overflow-x-auto bg-white rounded-xl shadow-md border border-gray-100">
+      <table className="min-w-full text-sm text-left">
+        {/* TABLE HEAD */}
+        <thead className="bg-gray-100 text-gray-600 uppercase text-xs">
+          <tr>
+            {columns.map((col, index) => (
+              <th key={index} className="px-6 py-4 font-bold">
+                {col.header}
+              </th>
+            ))}
+
+            {renderActions && (
+              <th className="px-6 py-4 font-bold text-center">
+                Actions
+              </th>
+            )}
+          </tr>
+        </thead>
+
+        {/* TABLE BODY */}
+        <tbody className="divide-y divide-gray-100">
+          {data.length === 0 ? (
             <tr>
-              {columns.map((col, idx) => (
-                <th key={idx} className="px-6 py-4 text-left text-sm font-bold text-gray-800">
-                  {col.header}
-                </th>
-              ))}
-              {onDelete && <th className="px-6 py-4 text-center text-sm font-bold text-gray-800">Actions</th>}
+              <td
+                colSpan={columns.length + (renderActions ? 1 : 0)}
+                className="px-6 py-10 text-center text-gray-500"
+              >
+                Data tidak tersedia
+              </td>
             </tr>
-          </thead>
-          <tbody className="divide-y divide-pink-100">
-            {data.map((row, idx) => (
-              <tr key={idx} className="hover:bg-pink-50 transition">
-                {columns.map((col, colIdx) => (
-                  <td key={colIdx} className="px-6 py-4 text-sm">
-                    {col.render ? col.render(row) : row[col.field]}
+          ) : (
+            data.map((row, rowIndex) => (
+              <tr
+                key={row.id ?? rowIndex}
+                className="hover:bg-gray-50 transition"
+              >
+                {columns.map((col, colIndex) => (
+                  <td key={colIndex} className="px-6 py-4 text-gray-700">
+                    {col.render
+                      ? col.render(row)
+                      : row[col.field]}
                   </td>
                 ))}
-                {onDelete && (
+
+                {renderActions && (
                   <td className="px-6 py-4 text-center">
-                    <button
-                      onClick={() => onDelete(row.id)}
-                      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition inline-flex items-center gap-2"
-                    >
-                      <Trash2 size={16} />
-                      Hapus
-                    </button>
+                    {renderActions(row)}
                   </td>
                 )}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            ))
+          )}
+        </tbody>
+      </table>
     </div>
   );
 }

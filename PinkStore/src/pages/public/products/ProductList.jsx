@@ -1,7 +1,7 @@
 ﻿// src/pages/publik/ProductList.jsx
 import React, { useState, useEffect } from 'react';
-import ProductCard from '../../components/Public/ProductCard';
-import ProductService from '../../services/ProductService';
+import ProductCard from '../../../components/Public/ProductCard';
+import ProductService from '../../../services/ProductService';
 
 function ProductList({ onAddToCart }) {
   const [products, setProducts] = useState([]);

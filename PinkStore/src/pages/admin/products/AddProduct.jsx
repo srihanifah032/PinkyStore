@@ -1,7 +1,7 @@
 ﻿import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import ProductService from '../../services/ProductService';
+import ProductService from '../../../services/ProductService';
 
 function AddProduct() {
   const navigate = useNavigate();
@@ -123,7 +123,7 @@ function AddProduct() {
           <div className="flex gap-3 pt-4">
             <button
               type="submit"
-              className="flex-1 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold py-3 rounded-lg transition shadow-lg"
+              className="flex-1 bg-gradient-to-r from-pink-500 to-pink-500 hover:from-pink-600 hover:to-pink-600 text-white font-bold py-3 rounded-lg transition shadow-lg"
             >
               Add Product
             </button>
