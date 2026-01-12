@@ -1,23 +1,18 @@
-import { Route, Navigate } from 'react-router-dom';
+import { Route, Navigate } from "react-router-dom";
 
-// Admin Pages
-import DashboardPage from '../pages/admin/Dashboard';
-import AdminProductsPage from '../pages/admin/Products';
-import AddProductPage from '../pages/admin/AddProduct';
-import EditProductPage from '../pages/admin/EditProduct';
-import AdminOrdersPage from '../pages/admin/Orders';
+import DashboardPage from "../pages/admin/dashboard/Dashboard";
+import ProductsPage from "../pages/admin/products/Products";
+import AddProductPage from "../pages/admin/products/AddProduct";
+import EditProductPage from "../pages/admin/products/EditProduct";
+import OrdersPage from "../pages/admin/orders/Orders";
 
-function AdminRoutes({ cart }) {
-  return (
-    <>
-      <Route index element={<Navigate to="dashboard" replace />} />
-      <Route path="dashboard" element={<DashboardPage cart={cart} />} />
-      <Route path="products" element={<AdminProductsPage />} />
-      <Route path="products/add" element={<AddProductPage />} />
-      <Route path="products/edit/:id" element={<EditProductPage />} />
-      <Route path="orders" element={<AdminOrdersPage cart={cart} />} />
-    </>
-  );
-}
-
-export default AdminRoutes;
+export const adminRoutes = (
+  <>
+    <Route index element={<Navigate to="dashboard" replace />} />
+    <Route path="dashboard" element={<DashboardPage />} />
+    <Route path="products" element={<ProductsPage />} />
+    <Route path="products/add" element={<AddProductPage />} />
+    <Route path="products/edit/:id" element={<EditProductPage />} />
+    <Route path="orders" element={<OrdersPage />} />
+  </>
+);

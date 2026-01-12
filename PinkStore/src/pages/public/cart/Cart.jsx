@@ -1,20 +1,25 @@
-﻿import React from 'react';
-import { Link } from 'react-router-dom';
-import { ShoppingCart, ShoppingBag, Trash2 } from 'lucide-react';
-import DataTable from '../../../components/admin/DataTable';
-import ProductBadges from '../../../components/Public/ProductBadges';
-import { formatPrice } from '../../../lib/utils';
+﻿import React from "react"
+import { Link, useNavigate } from "react-router-dom"
+import { ShoppingCart, ShoppingBag, Trash2 } from "lucide-react"
 
-function Cart({ cart, onRemoveFromCart }) {
-  const getTotalPrice = () => {
-    return cart.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
-  };
+import DataTable from "../../../components/admin/DataTable"
+import ProductBadges from "../../../components/Public/ProductBadges"
+import { formatPrice } from "../../../lib/utils"
+import { Button } from "@/components/ui/button"
+
+function Cart({ cart = [], onRemoveFromCart }) {
+  const navigate = useNavigate()
+
+  const getTotalPrice = () =>
+    cart.reduce((total, item) => total + item.price * item.quantity, 0)
+
+  const handleCheckout = () => {
+    localStorage.setItem("cart", JSON.stringify(cart))
+    navigate("/checkout")
+  }
 
   // =====================
-  // EMPTY CART STATE
+  // EMPTY CART
   // =====================
   if (cart.length === 0) {
     return (
@@ -30,15 +35,14 @@ function Cart({ cart, onRemoveFromCart }) {
           Belum ada produk yang ditambahkan
         </p>
 
-        <Link
-          to="/products"
-          className="inline-flex items-center gap-2 bg-pink-500 hover:bg-pink-600 text-white font-bold px-6 py-3 rounded-lg transition"
-        >
-          <ShoppingBag size={20} />
-          Mulai Belanja
+        <Link to="/products">
+          <Button variant="pink" size="xl">
+            <ShoppingBag size={22} />
+            Mulai Belanja
+          </Button>
         </Link>
       </div>
-    );
+    )
   }
 
   // =====================
@@ -54,43 +58,19 @@ function Cart({ cart, onRemoveFromCart }) {
         data={cart}
         columns={[
           {
-            header: 'ID',
-            field: 'id',
-            render: (row) => (
-              <span className="font-bold">#{row.id}</span>
-            ),
+            header: "Produk",
+            render: (row) => <span className="font-bold">{row.name}</span>,
           },
           {
-            header: 'Produk',
-            field: 'name',
-            render: (row) => (
-              <span className="font-bold">{row.name}</span>
-            ),
+            header: "Kategori",
+            render: (row) => <ProductBadges category={row.category} />,
           },
           {
-            header: 'Kategori',
-            field: 'category',
-            render: (row) => (
-              <ProductBadges category={row.category} />
-            ),
-          },
-          {
-            header: 'Warna',
-            field: 'color',
-            render: (row) => (
-              <span className="font-semibold text-pink-600">
-                {row.color}
-              </span>
-            ),
-          },
-          {
-            header: 'Harga',
-            field: 'price',
+            header: "Harga",
             render: (row) => formatPrice(row.price),
           },
           {
-            header: 'Jumlah',
-            field: 'quantity',
+            header: "Jumlah",
             render: (row) => (
               <span className="bg-pink-200 text-pink-800 px-4 py-2 rounded-xl font-bold">
                 {row.quantity}
@@ -98,8 +78,7 @@ function Cart({ cart, onRemoveFromCart }) {
             ),
           },
           {
-            header: 'Subtotal',
-            field: 'subtotal',
+            header: "Subtotal",
             render: (row) => (
               <span className="font-bold text-pink-600">
                 {formatPrice(row.price * row.quantity)}
@@ -108,13 +87,14 @@ function Cart({ cart, onRemoveFromCart }) {
           },
         ]}
         renderActions={(row) => (
-          <button
+          <Button
+            variant="danger"
+            size="sm"
             onClick={() => onRemoveFromCart(row.id)}
-            className="inline-flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition"
           >
             <Trash2 size={16} />
             Hapus
-          </button>
+          </Button>
         )}
       />
 
@@ -128,23 +108,18 @@ function Cart({ cart, onRemoveFromCart }) {
         </span>
       </div>
 
-      {/* ACTION BUTTONS */}
+      {/* ACTION */}
       <div className="mt-6 flex justify-end gap-4">
-        <Link
-          to="/products"
-          className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold px-6 py-3 rounded-lg transition"
-        >
-          Lanjut Belanja
-        </Link>
+        <Button asChild variant="secondary">
+          <Link to="/products">Lanjut Belanja</Link>
+        </Button>
 
-        <button
-          className="bg-pink-500 hover:bg-pink-600 text-white font-bold px-8 py-3 rounded-lg transition shadow-lg"
-        >
+        <Button variant="pink" size="lg" onClick={handleCheckout}>
           Checkout
-        </button>
+        </Button>
       </div>
     </div>
-  );
+  )
 }
 
-export default Cart;
+export default Cart
