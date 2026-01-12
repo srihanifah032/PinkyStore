@@ -1,44 +1,79 @@
-﻿import { ShoppingCart, Package } from 'lucide-react';
-import ProductBadges from './ProductBadges';
-import ProductPrice from './ProductPrice';
+﻿import { ShoppingCart, Package } from "lucide-react"
+import ProductBadges from "./ProductBadges"
+import ProductPrice from "./ProductPrice"
+import { Button } from "@/components/ui/button"
+import { useToast } from "@/components/ui/use-toast"
 
 function ProductCard({ product, onAddToCart }) {
+  const { toast } = useToast()
+
   const handleBuy = () => {
-    onAddToCart(product);
-    console.log('Tombol "Beli" diklik:', {
-      productId: product.id,
-      productName: product.name,
-      color: product.color,
-      price: product.price,
-      timestamp: new Date().toISOString()
-    });
-  };
+    if (product.stock <= 0) {
+      toast({
+        title: "Stok habis 😢",
+        description: "Produk ini sedang tidak tersedia",
+        variant: "destructive",
+      })
+      return
+    }
+
+    onAddToCart(product)
+
+    toast({
+      title: "Berhasil ditambahkan 🛒",
+      description: `${product.name} masuk ke keranjang`,
+      className: "bg-pink-50 border-pink-300 text-pink-700",
+    })
+  }
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border-2 border-pink-100">
-      <div className="bg-gradient-to-br from-pink-300 via-pink-300 to-pink-300 h-56 flex items-center justify-center relative">
+    <div className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 border-2 border-pink-100">
+      
+      {/* IMAGE / HEADER */}
+      <div className="bg-gradient-to-br from-pink-300 to-pink-400 h-56 flex items-center justify-center relative">
         <Package size={72} className="text-white opacity-30" />
-        <div className="absolute top-4 right-4 bg-white rounded-full px-4 py-2 text-xs font-bold text-pink-600 shadow-md">
-          {product.color}
-        </div>
+
+        {product.color && (
+          <div className="absolute top-4 right-4 bg-white rounded-full px-4 py-2 text-xs font-bold text-pink-600 shadow-md">
+            {product.color}
+          </div>
+        )}
       </div>
+
+      {/* CONTENT */}
       <div className="p-6">
         <ProductBadges category={product.category} />
-        <h3 className="text-xl font-bold mb-2 text-gray-800 mt-3">{product.name}</h3>
+
+        <h3 className="text-xl font-bold mt-3 mb-2 text-gray-800">
+          {product.name}
+        </h3>
+
         <ProductPrice price={product.price} />
-        <p className="text-sm text-gray-600 mb-5">
-          Stok: <span className="font-bold text-green-600">{product.stock} pcs</span>
+
+        <p className="text-sm mb-5">
+          Stok:{" "}
+          <span
+            className={`font-bold ${
+              product.stock > 0 ? "text-green-600" : "text-red-500"
+            }`}
+          >
+            {product.stock > 0 ? `${product.stock} pcs` : "Habis"}
+          </span>
         </p>
-        <button
+
+        <Button
           onClick={handleBuy}
-          className="w-full bg-gradient-to-r from-pink-500 to-pink-500 hover:from-pink-600 hover:to-pink-600 text-white font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 transition shadow-lg"
+          size="lg"
+          className="w-full gap-2"
+          disabled={product.stock <= 0}
+          variant={product.stock > 0 ? "default" : "outline"}
         >
           <ShoppingCart size={20} />
-          Beli Sekarang
-        </button>
+          {product.stock > 0 ? "Beli Sekarang" : "Stok Habis"}
+        </Button>
       </div>
     </div>
-  );
+  )
 }
 
-export default ProductCard;
+export default ProductCard
