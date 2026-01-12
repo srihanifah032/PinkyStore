@@ -53,7 +53,7 @@ Mohon konfirmasi ketersediaan & langkah selanjutnya 🙏
 Terima kasih.
     `;
 
-    const waUrl = `https://wa.me/6285183030615?text=${encodeURIComponent(
+    const waUrl = `https://wa.me/6287763699833?text=${encodeURIComponent(
       waText
     )}`;
 
