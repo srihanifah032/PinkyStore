@@ -1,36 +1,45 @@
-import BASE_URL from "./api";
+import {
+  collection,
+  addDoc,
+  onSnapshot,
+  query,
+  orderBy,
+  serverTimestamp,
+} from "firebase/firestore";
+import { db } from "@/firebase";
 
-const ENDPOINT = `${BASE_URL}/orders`;
+const OrderService = {
+  // ✅ CREATE ORDER
+  createOrder: async (cart, totalPrice) => {
+    const totalItems = cart.reduce(
+      (sum, item) => sum + item.quantity,
+      0
+    );
 
-export const getOrders = async () => {
-  const res = await fetch(ENDPOINT);
-  return res.json();
+    await addDoc(collection(db, "orders"), {
+      items: cart,
+      totalItems,
+      totalPrice,
+      status: "paid",
+      createdAt: serverTimestamp(),
+    });
+  },
+
+  // ✅ REALTIME LISTENER (INI YANG KAMU PANGGIL)
+  subscribeOrders: (callback) => {
+    const q = query(
+      collection(db, "orders"),
+      orderBy("createdAt", "desc")
+    );
+
+    return onSnapshot(q, (snapshot) => {
+      const orders = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      callback(orders);
+    });
+  },
 };
 
-export const getOrder = async (id) => {
-  const res = await fetch(`${ENDPOINT}/${id}`);
-  return res.json();
-};
-
-export const createOrder = async (data) => {
-  const res = await fetch(ENDPOINT, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-  return res.json();
-};
-
-export const updateOrder = async (id, data) => {
-  const res = await fetch(`${ENDPOINT}/${id}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-  return res.json();
-};
-
-export const deleteOrder = async (id) => {
-  const res = await fetch(`${ENDPOINT}/${id}`, { method: "DELETE" });
-  return res.json();
-};
+export default OrderService;
