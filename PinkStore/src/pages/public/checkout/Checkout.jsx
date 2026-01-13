@@ -36,7 +36,7 @@ function Checkout() {
             item.price * item.quantity
           )}`
       )
-      .join("%0A");
+      .join("\n");
 
     const waText = `
 Halo Admin Pink Store 👋
@@ -51,17 +51,22 @@ ${formatPrice(total)}
 
 Mohon konfirmasi ketersediaan & langkah selanjutnya 🙏
 Terima kasih.
-    `;
+    `.trim();
 
-    const waUrl = `https://wa.me/6287763699833?text=${encodeURIComponent(
+    const waUrl = `https://wa.me/62895322443149?text=${encodeURIComponent(
       waText
     )}`;
 
-    // 2️⃣ BUKA WHATSAPP
-    window.open(waUrl, "_blank");
-
     try {
       setLoading(true);
+
+      // 2️⃣ BUKA WHATSAPP
+      window.open(waUrl, "_blank");
+
+      toast({
+        title: "Menghubungi admin 📲",
+        description: "Silakan kirim pesan WhatsApp untuk melanjutkan pesanan",
+      });
 
       // 3️⃣ SIMPAN ORDER
       await OrderService.createOrder(cart, total);
@@ -72,13 +77,15 @@ Terima kasih.
       // 5️⃣ CLEAR CART
       localStorage.removeItem("cart");
 
-      toast({
-        title: "Admin sudah dihubungi 📲",
-        description:
-          "Pesanan Anda telah dikirim ke WhatsApp admin. Mohon tunggu konfirmasi.",
-      });
+      setTimeout(() => {
+        toast({
+          title: "Pesanan tercatat ✅",
+          description:
+            "Admin akan menghubungi Anda setelah menerima pesan WhatsApp",
+        });
 
-      navigate("/");
+        navigate("/");
+      }, 1200);
     } catch (error) {
       console.error(error);
       toast({
@@ -97,6 +104,7 @@ Terima kasih.
         Checkout
       </h2>
 
+      {/* CART ITEMS */}
       <div className="space-y-4 mb-6">
         {cart.map((item) => (
           <div
@@ -116,6 +124,7 @@ Terima kasih.
         ))}
       </div>
 
+      {/* TOTAL */}
       <div className="flex justify-between text-xl font-bold mb-8">
         <span>Total</span>
         <span className="text-pink-600">
@@ -123,6 +132,7 @@ Terima kasih.
         </span>
       </div>
 
+      {/* ACTION */}
       <button
         onClick={handleCheckout}
         disabled={loading}
@@ -133,8 +143,14 @@ Terima kasih.
               : "bg-pink-600 hover:bg-pink-700 text-white"
           }`}
       >
-        {loading ? "Menghubungi Admin..." : "Checkout via WhatsApp"}
+        {loading ? "Mengarahkan ke WhatsApp..." : "Checkout via WhatsApp"}
       </button>
+
+      {/* INFO */}
+      <p className="text-center text-sm text-gray-500 mt-4">
+        Setelah WhatsApp terbuka, silakan kirim pesan ke admin untuk
+        menyelesaikan pesanan.
+      </p>
     </div>
   );
 }

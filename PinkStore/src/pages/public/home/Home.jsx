@@ -7,14 +7,17 @@ import { useAuth } from "../../../context/AuthContext";
 
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
+import Loading from "@/components/ui/Loading";
 
 function Home({ onAddToCart }) {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // ✅ AMBIL DARI PUBLIC LAYOUT
+  // ✅ SAFE OUTLET CONTEXT
   const outletContext = useOutletContext();
   const refreshKey = outletContext?.refreshKey ?? 0;
 
@@ -22,10 +25,10 @@ function Home({ onAddToCart }) {
   // FETCH PRODUCTS
   // ======================
   const fetchProducts = async () => {
+    setLoading(true);
     try {
       const allProducts = await ProductService.getProducts();
 
-      // 🔥 pastikan stock number & tampilkan semua
       setProducts(
         allProducts.map((p) => ({
           ...p,
@@ -34,6 +37,8 @@ function Home({ onAddToCart }) {
       );
     } catch (error) {
       console.error("Error fetching products:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -54,6 +59,13 @@ function Home({ onAddToCart }) {
 
     setTimeout(() => navigate("/login"), 300);
   };
+
+  // ======================
+  // LOADING UI
+  // ======================
+  if (loading) {
+    return <Loading text="Memuat produk terbaru..." />;
+  }
 
   return (
     <div>
@@ -90,21 +102,20 @@ function Home({ onAddToCart }) {
       </div>
 
       {/* PRODUCTS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-        {products.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            onAddToCart={onAddToCart}
-          />
-        ))}
-      </div>
-
-      {/* EMPTY */}
-      {products.length === 0 && (
+      {products.length === 0 ? (
         <p className="text-center text-gray-500 mt-10">
           Produk belum tersedia
         </p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          {products.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onAddToCart={onAddToCart}
+            />
+          ))}
+        </div>
       )}
     </div>
   );

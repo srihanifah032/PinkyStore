@@ -2,17 +2,20 @@
 import DataTable from "../../../components/admin/DataTable";
 import { formatPrice } from "../../../lib/utils";
 import OrderService from "../../../services/OrderService";
+import Loading from "../../../components/ui/Loading";
 
 function AdminOrdersPage() {
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // 🔥 REALTIME LISTENER
+    // 🔥 REALTIME LISTENER FIRESTORE
     const unsubscribe = OrderService.subscribeOrders((data) => {
-      const flattened = data.flatMap((order) =>
+      const flattenedOrders = data.flatMap((order) =>
         order.items.map((item) => ({
           orderId: order.id,
-          orderDate: order.createdAt?.toDate?.().toLocaleString() || "-",
+          orderDate:
+            order.createdAt?.toDate?.().toLocaleString() || "-",
           customer: order.userName || "Guest",
           product: item.name,
           category: item.category || "-",
@@ -23,11 +26,19 @@ function AdminOrdersPage() {
         }))
       );
 
-      setOrders(flattened);
+      setOrders(flattenedOrders);
+      setLoading(false);
     });
 
     return () => unsubscribe();
   }, []);
+
+  // ======================
+  // LOADING STATE
+  // ======================
+  if (loading) {
+    return <Loading text="Memuat data pesanan..." />;
+  }
 
   return (
     <div>
@@ -43,10 +54,22 @@ function AdminOrdersPage() {
         <DataTable
           data={orders}
           columns={[
-            { header: "Customer", field: "customer" },
-            { header: "Product", field: "product" },
-            { header: "Category", field: "category" },
-            { header: "Qty", field: "quantity" },
+            {
+              header: "Customer",
+              field: "customer",
+            },
+            {
+              header: "Product",
+              field: "product",
+            },
+            {
+              header: "Category",
+              field: "category",
+            },
+            {
+              header: "Qty",
+              field: "quantity",
+            },
             {
               header: "Price",
               field: "price",
@@ -57,7 +80,24 @@ function AdminOrdersPage() {
               field: "total",
               render: (row) => formatPrice(row.total),
             },
-            { header: "Status", field: "status" },
+            {
+              header: "Status",
+              field: "status",
+              render: (row) => (
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-medium
+                    ${
+                      row.status === "completed"
+                        ? "bg-green-100 text-green-700"
+                        : row.status === "cancelled"
+                        ? "bg-red-100 text-red-700"
+                        : "bg-yellow-100 text-yellow-700"
+                    }`}
+                >
+                  {row.status}
+                </span>
+              ),
+            },
           ]}
         />
       )}
